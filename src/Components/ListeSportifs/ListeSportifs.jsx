@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import MyCard from '../MyCard/myCardc'
+import MyCard from '../MyCard/myCard'
 
 import FirebaseContext from '../Firebase/FirebaseContext'
 import firebase from '../Firebase/firebase';
