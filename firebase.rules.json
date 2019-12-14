@@ -1,0 +1,46 @@
+{
+  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
+  "rules": {
+    "users": {
+      //A verified user can read personnal data of other users
+      ".read": "root.child('whiteList').child(auth.uid).exists()",
+      "$user_id": {
+        //A (new) user can write its own directory
+        //A new user can read its own directory
+        //Once a new user is registred, he can't write readOnly
+        //Where we store name/firstname
+        ".read": "$user_id===auth.uid",
+        ".write": "root.child('whiteList').child(auth.uid).child('admin').val()===true",
+        "readWrite": {
+          ".write": "$user_id===auth.uid",
+        },
+        "readOnly": {
+          ".write": "$user_id===auth.uid && !root.child('whiteList').child(auth.uid).exists()"
+        }
+      }
+    },
+    "whiteList": {
+      //trusted users are moved to whiteList by admin
+      //roles (admin, coach, simple user) are written by admin here
+      ".read": "root.child('whiteList').child(auth.uid).exists()",
+      ".write": "root.child('whiteList').child(auth.uid).child('admin').val()===true"
+    },
+    "evenements": {
+      //Everyone in whiteList can read here but can only write its own stuff
+      //admin can write anything
+      ".read": "root.child('whiteList').child(auth.uid).exists()",
+      ".write": "root.child('whiteList').child(auth.uid).child('admin').val()===true",
+      "$typeOfEvent": {
+        "$matchid": {
+          "$section": {
+            "$user_id": {
+              ".write": "($user_id===auth.uid && $section==='inscrits') || 
+                					 ($section==='selection' && root.child('whiteList').child(auth.uid).child('coach').val()===true) ||
+                  				 ($section==='inscrits' && root.child('users').child($user_id).child('readWrite').child('trustedUsers').child(auth.uid).exists())",
+            }
+          }
+        }
+      }
+    }
+  }
+}
