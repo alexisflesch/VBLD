@@ -1,68 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projet créé avec [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Attention
 
-In the project directory, you can run:
+Ce logiciel est en phase de développement, il n'est pas (encore) prévu pour être déployé
+simplement par un utilisateur non averti. Ci-dessous quelques pistes pour
+les plus vaillants.
 
-### `yarn start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installation
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+* Créer une bdd firebase
 
-### `yarn test`
+Créer un compte chez firebase et démarrer une "realtime database". Renseigner ensuite le fichier
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+src/Components/Firebase/firebase.jsx
 
-### `yarn build`
+avec les credentials. Appliquer les règles de sécurité du fichier ci-dessous à votre bdd :
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+./firebase.rules.json
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Donner les droits d'admin/de coach à son propre utilisateur sur firebase. Il faut pour cela ajouter
+son uid à /whiteList :
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+/whiteList/uid : {admin:true, coach:true}
 
-### `yarn eject`
+Dans /src/Components/UtilityScripts/createStuff.jsx, on trouvera des fonctions pour 
+mettre en place les entraînements/les matchs et comprendre le format de la bdd.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* HTTPS
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Pour profiter de l'authentification avec Facebook, il faut activer https. Il faut aussi
+suivre les indications données sur le site de firebase pour déclarer l'appli auprès de Facebook
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* Autres
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+J'en oublie encore probablement...
