@@ -32,10 +32,15 @@
       ".write": "root.child('whiteList').child(auth.uid).child('admin').val()===true",
       "$typeOfEvent": {
         "$matchid": {
-          "$section": {
+          ".write": "($typeOfEvent!=='entrainements'
+          			  			&& root.child('whiteList').child(auth.uid).child('miniAdmin').val()===true 
+          			  			&& (!data.exists() || root.child('evenements').child($typeOfEvent).child($matchid).child('pushedBy').val()===auth.uid)
+          			  		)",
+        		"$section": {
+            ".write": "($section==='resultat' && root.child('whiteList').child(auth.uid).child('miniAdmin').val()===true)",
             "$user_id": {
               ".write": "($user_id===auth.uid && $section==='inscrits') || 
-                					 ($section==='selection' && root.child('whiteList').child(auth.uid).child('coach').val()===true) ||
+                					 ($section==='selection' && root.child('whiteList').child(auth.uid).child('coach').val()===true) || 
                   				 ($section==='inscrits' && root.child('users').child($user_id).child('readWrite').child('trustedUsers').child(auth.uid).exists())",
             }
           }

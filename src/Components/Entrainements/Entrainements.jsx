@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import MaterialUIPickers from '../DatePicker/datePicker';
-import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid';
 
 import FirebaseContext from '../Firebase/FirebaseContext'
 import { extractDates } from '../UtilityScripts/TreeParsing'
@@ -11,13 +10,9 @@ import LocationAndTime from '../LocationAndTime/LocationAndTime'
 import LoadingDiv from '../LoadingDiv/LoadingDiv'
 import AffichageTotaux from '../AffichageTotaux/AffichageTotaux'
 import { makeStyles } from '@material-ui/core/styles';
-import { extractPresencePot } from '../UtilityScripts/TreeParsing'
-import { authorizedEdit, isMiniAdmin } from '../UtilityScripts/FindStuff'
-
-import Summary from './Summary'
-import DialogEdit from '../Administration/DialogEdit'
-import AddButton from '../Administration/AddButton'
-
+import { multipleEvents, extractPresence } from '../UtilityScripts/TreeParsing'
+import AlertInfo from '../AlertInfo/AlertInfo'
+import Box from '@material-ui/core/Box'
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,19 +24,19 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Pots() {
+export default function Entrainements() {
   const classes = useStyles();
 
   //Context de firebase
-  const { trees, loadings, errors, user } = useContext(FirebaseContext)
+  const { trees, loadings, errors } = useContext(FirebaseContext)
 
   //Pour que ça soit lisible
   const { treeE, treeU, treeW } = trees;
   const { loadingE, loadingU, loadingW } = loadings;
-  const { errorE, errorW } = errors;
+  const { errorE } = errors;
 
-  //Listes des dates des pots (à donner au calendrier ensuite)
-  var { datesAndMore, nextEvent } = extractDates(treeE, loadingE, "pots")
+  //Listes des dates des matchs (à donner au calendrier ensuite)
+  var { datesAndMore, nextEvent } = extractDates(trees['treeE'], loadings['loadingE'], "entrainements")
 
   //Date du prochain événement
   var [date, dateId] = [nextEvent['date'], nextEvent['dateId']]
@@ -50,33 +45,23 @@ export default function Pots() {
   //si un changement de date a eu lieu
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
 
+
   //Infobulles avec le nombre de présents
-  const { totaux, summary } = extractPresencePot(treeE, loadingE, treeW, loadingW, treeU, loadingU, currentDateId)
+  const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "entrainements", currentDateId)
 
-  // Les utilisateurs autorisés peuvent modifier le pot :
-  // - déplacer le pot (si personne d'inscrit)
-  // - supprimer le pot (si personne d'inscrit)
-  const { authorized, editable, deletable, path } = authorizedEdit(user['uid'], treeW, loadingW, errorW, treeE, loadingE, errorE, "pots", currentDateId)
 
-  let editer
-  if (!authorized) {
-    editer = <Box p={3} />
+  //S'il y a un autre événement en même temps que l'entraînement, on affiche un panneau
+  const { mult, events } = multipleEvents(treeE, loadingE, errorE, "entrainements", currentDateId)
+  let attention
+  if (!mult) {
+    attention = <Box p={3} />
   }
   else {
-    editer = <DialogEdit editable={editable} path={path} deletable={deletable} />
-  }
-  // Les utilisateurs autorisés peuvent ajouter un pot :
-  let addStuff
-  if (isMiniAdmin(treeW, loadingW, errorW, user['uid'])) {
-    addStuff = <AddButton
-      branchName='pots'
-      datesAndMore={datesAndMore}
-      userId={user['uid']}
-    />
+    attention = <AlertInfo events={events} />
   }
 
 
-  // Below is a fix needed if <matchs /> is the first thing
+  // Below is a fix needed if <Entrainements /> is the first thing
   // the app shows. Maybe not need if users have to log in
   // currentDateId is not properly initialized because FirebaseContext
   // is initialized with a fake date while loading.
@@ -94,27 +79,13 @@ export default function Pots() {
   else {
     return (
       <div className={classes.margins}>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-          spacing={0}
-        >
-          <Grid item>
-            <Summary summary={summary} />
-          </Grid>
-          <Grid item>
-            <AffichageTotaux totaux={totaux} />
-          </Grid>
-        </Grid>
+        <AffichageTotaux totaux={totaux} />
         <MaterialUIPickers
           currentDate={date}
           currentDateId={currentDateId}
           setCurrentDateId={setCurrentDateId}
           datesAndMore={datesAndMore}
         />
-
         <Grid
           container
           direction="row"
@@ -124,21 +95,18 @@ export default function Pots() {
         >
           <Grid item>
             <LocationAndTime
-              currentDate={date}
               currentDateId={currentDateId}
-              trainingOrMatch="pots"
+              trainingOrMatch="entrainements"
             />
           </Grid>
           <Grid item xs={1}>
-            {editer}
+            {attention}
           </Grid>
         </Grid>
-
         <ListeSportifs
           currentDateId={currentDateId}
-          trainingOrMatch="pots"
+          trainingOrMatch="entrainements"
         />
-        {addStuff}
       </div >
     )
   }

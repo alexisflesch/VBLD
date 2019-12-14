@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import MaterialUIPickers from '../DatePicker/datePicker';
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
 
 import FirebaseContext from '../Firebase/FirebaseContext'
 import { extractDates } from '../UtilityScripts/TreeParsing'
@@ -9,12 +11,13 @@ import LocationAndTime from '../LocationAndTime/LocationAndTime'
 import LoadingDiv from '../LoadingDiv/LoadingDiv'
 import AffichageTotaux from '../AffichageTotaux/AffichageTotaux'
 import { makeStyles } from '@material-ui/core/styles';
-import { extractPresence } from '../UtilityScripts/TreeParsing'
+import { extractPresencePot } from '../UtilityScripts/TreeParsing'
 import { authorizedEdit, isMiniAdmin } from '../UtilityScripts/FindStuff'
+
+import Summary from './Summary'
 import DialogEdit from '../Administration/DialogEdit'
-import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
 import AddButton from '../Administration/AddButton'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Matchs() {
+export default function Pots() {
   const classes = useStyles();
 
   //Context de firebase
@@ -37,8 +40,8 @@ export default function Matchs() {
   const { loadingE, loadingU, loadingW } = loadings;
   const { errorE, errorW } = errors;
 
-  //Listes des dates des matchs (à donner au calendrier ensuite)
-  var { datesAndMore, nextEvent } = extractDates(treeE, loadingE, "matchs")
+  //Listes des dates des pots (à donner au calendrier ensuite)
+  var { datesAndMore, nextEvent } = extractDates(treeE, loadingE, "pots")
 
   //Date du prochain événement
   var [date, dateId] = [nextEvent['date'], nextEvent['dateId']]
@@ -48,14 +51,12 @@ export default function Matchs() {
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
 
   //Infobulles avec le nombre de présents
-  const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "matchs", currentDateId)
+  const { totaux, summary } = extractPresencePot(treeE, loadingE, treeW, loadingW, treeU, loadingU, currentDateId)
 
-
-  // Les utilisateurs autorisés peuvent modifier l'événement :
-  // - renseigner le score de la rencontre
-  // - déplacer la rencontre
-  // - supprimer la rencontre
-  const { authorized, editable, deletable, path } = authorizedEdit(user['uid'], treeW, loadingW, errorW, treeE, loadingE, errorE, "matchs", currentDateId)
+  // Les utilisateurs autorisés peuvent modifier le pot :
+  // - déplacer le pot (si personne d'inscrit)
+  // - supprimer le pot (si personne d'inscrit)
+  const { authorized, editable, deletable, path } = authorizedEdit(user['uid'], treeW, loadingW, errorW, treeE, loadingE, errorE, "pots", currentDateId)
 
   let editer
   if (!authorized) {
@@ -68,7 +69,7 @@ export default function Matchs() {
   let addStuff
   if (isMiniAdmin(treeW, loadingW, errorW, user['uid'])) {
     addStuff = <AddButton
-      branchName='matchs'
+      branchName='pots'
       datesAndMore={datesAndMore}
       userId={user['uid']}
     />
@@ -93,13 +94,27 @@ export default function Matchs() {
   else {
     return (
       <div className={classes.margins}>
-        <AffichageTotaux totaux={totaux} />
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          spacing={0}
+        >
+          <Grid item>
+            <Summary summary={summary} />
+          </Grid>
+          <Grid item>
+            <AffichageTotaux totaux={totaux} />
+          </Grid>
+        </Grid>
         <MaterialUIPickers
           currentDate={date}
           currentDateId={currentDateId}
           setCurrentDateId={setCurrentDateId}
           datesAndMore={datesAndMore}
         />
+
         <Grid
           container
           direction="row"
@@ -109,18 +124,18 @@ export default function Matchs() {
         >
           <Grid item>
             <LocationAndTime
-              currentDate={date}
               currentDateId={currentDateId}
-              trainingOrMatch="matchs"
+              trainingOrMatch="pots"
             />
           </Grid>
           <Grid item xs={1}>
             {editer}
           </Grid>
         </Grid>
+
         <ListeSportifs
           currentDateId={currentDateId}
-          trainingOrMatch="matchs"
+          trainingOrMatch="pots"
         />
         {addStuff}
       </div >

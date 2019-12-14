@@ -18,7 +18,6 @@ import { ReactComponent as LogoGoogle } from '../../images/logoGoogle.svg';
 import { ReactComponent as LogoFacebook } from '../../images/logoFacebook.svg';
 
 import firebase from '../Firebase/firebase';
-import fireClass from "firebase"
 
 
 const useStyles = makeStyles(theme => ({
@@ -105,14 +104,14 @@ function login(email, password) {
 
 
 function handleFacebookLogin() {
-  var provider = new fireClass.auth.FacebookAuthProvider();
+  var provider = new firebase.auth.FacebookAuthProvider();
   firebase.auth().signInWithRedirect(provider);
   firebase.auth().getRedirectResult().then(function (result) { })
 }
 
 
 function handleGoogleLogin() {
-  var provider = new fireClass.auth.GoogleAuthProvider();
+  var provider = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithRedirect(provider);
   firebase.auth().getRedirectResult().then(function (result) { })
 }

@@ -69,7 +69,6 @@ function MainApp(props) {
   const [mainDiv, setMainDiv] = React.useState(<News />);
   const [pageName, setPageName] = React.useState('Accueil');
 
-
   //Icône pour trier les sportifs ('a-z' ou 'presence')
   //On ajoutera dans le contexte principal un booléen qui passera à true quand il faudra trier
   //  - menu : chaîne de caractères affichée dans la bar principale (bouton de tri ou rien)

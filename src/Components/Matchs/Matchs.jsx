@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import MaterialUIPickers from '../DatePicker/datePicker';
-import Grid from '@material-ui/core/Grid';
 
 import FirebaseContext from '../Firebase/FirebaseContext'
 import { extractDates } from '../UtilityScripts/TreeParsing'
@@ -10,9 +9,12 @@ import LocationAndTime from '../LocationAndTime/LocationAndTime'
 import LoadingDiv from '../LoadingDiv/LoadingDiv'
 import AffichageTotaux from '../AffichageTotaux/AffichageTotaux'
 import { makeStyles } from '@material-ui/core/styles';
-import { multipleEvents, extractPresence } from '../UtilityScripts/TreeParsing'
-import AlertInfo from '../AlertInfo/AlertInfo'
+import { extractPresence } from '../UtilityScripts/TreeParsing'
+import { authorizedEdit, isMiniAdmin } from '../UtilityScripts/FindStuff'
+import DialogEdit from '../Administration/DialogEdit'
+import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import AddButton from '../Administration/AddButton'
 
 
 const useStyles = makeStyles(theme => ({
@@ -24,19 +26,19 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Entrainements() {
+export default function Matchs() {
   const classes = useStyles();
 
   //Context de firebase
-  const { trees, loadings, errors } = useContext(FirebaseContext)
+  const { trees, loadings, errors, user } = useContext(FirebaseContext)
 
   //Pour que ça soit lisible
   const { treeE, treeU, treeW } = trees;
   const { loadingE, loadingU, loadingW } = loadings;
-  const { errorE } = errors;
+  const { errorE, errorW } = errors;
 
   //Listes des dates des matchs (à donner au calendrier ensuite)
-  var { datesAndMore, nextEvent } = extractDates(trees['treeE'], loadings['loadingE'], "entrainements")
+  var { datesAndMore, nextEvent } = extractDates(treeE, loadingE, "matchs")
 
   //Date du prochain événement
   var [date, dateId] = [nextEvent['date'], nextEvent['dateId']]
@@ -45,23 +47,35 @@ export default function Entrainements() {
   //si un changement de date a eu lieu
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
 
-
   //Infobulles avec le nombre de présents
-  const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "entrainements", currentDateId)
+  const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "matchs", currentDateId)
 
 
-  //S'il y a un autre événement en même temps que l'entraînement, on affiche un panneau
-  const { mult, events } = multipleEvents(treeE, loadingE, errorE, "entrainements", currentDateId)
-  let attention
-  if (!mult) {
-    attention = <Box p={3} />
+  // Les utilisateurs autorisés peuvent modifier l'événement :
+  // - renseigner le score de la rencontre
+  // - déplacer la rencontre
+  // - supprimer la rencontre
+  const { authorized, editable, deletable, path } = authorizedEdit(user['uid'], treeW, loadingW, errorW, treeE, loadingE, errorE, "matchs", currentDateId)
+
+  let editer
+  if (!authorized) {
+    editer = <Box p={3} />
   }
   else {
-    attention = <AlertInfo events={events} />
+    editer = <DialogEdit editable={editable} path={path} deletable={deletable} />
+  }
+  // Les utilisateurs autorisés peuvent ajouter un pot :
+  let addStuff
+  if (isMiniAdmin(treeW, loadingW, errorW, user['uid'])) {
+    addStuff = <AddButton
+      branchName='matchs'
+      datesAndMore={datesAndMore}
+      userId={user['uid']}
+    />
   }
 
 
-  // Below is a fix needed if <Entrainements /> is the first thing
+  // Below is a fix needed if <matchs /> is the first thing
   // the app shows. Maybe not need if users have to log in
   // currentDateId is not properly initialized because FirebaseContext
   // is initialized with a fake date while loading.
@@ -95,19 +109,19 @@ export default function Entrainements() {
         >
           <Grid item>
             <LocationAndTime
-              currentDate={date}
               currentDateId={currentDateId}
-              trainingOrMatch="entrainements"
+              trainingOrMatch="matchs"
             />
           </Grid>
           <Grid item xs={1}>
-            {attention}
+            {editer}
           </Grid>
         </Grid>
         <ListeSportifs
           currentDateId={currentDateId}
-          trainingOrMatch="entrainements"
+          trainingOrMatch="matchs"
         />
+        {addStuff}
       </div >
     )
   }

@@ -158,13 +158,10 @@ function extractDates(tree, loading, branchName) {
   var datesAndMore = []
   const keys = Object.keys(subTree)
   for (const dateId of keys) {
-    if (dateId !== 'content') {
-      var date = new Date(parseInt(subTree[dateId]['numericalDate']))
-      // var location = subTree[dateId]['location']
-      var domicile = subTree[dateId]['EquipeDomicile']
-      var exterieur = subTree[dateId]['EquipeExterieur']
-      datesAndMore.push({ date, dateId, domicile, exterieur })
-    }
+    var date = new Date(parseInt(subTree[dateId]['numericalDate']))
+    var domicile = subTree[dateId]['EquipeDomicile']
+    var exterieur = subTree[dateId]['EquipeExterieur']
+    datesAndMore.push({ date, dateId, domicile, exterieur })
   }
 
   //Tri de la liste des dates par ordre chronologique
