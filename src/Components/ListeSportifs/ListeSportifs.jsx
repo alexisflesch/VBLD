@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import MyCard from '../MyCard/MyCard'
+import Typography from '@material-ui/core/Typography'
 
 import FirebaseContext from '../Firebase/FirebaseContext'
 import firebase from '../Firebase/firebase';
@@ -108,7 +109,16 @@ export default function ListeSportifs(props) {
   //Affichage de la liste si elle existe
   let listeSportifs
   if (sportifs.length === 0) {
-    listeSportifs = ('Sélectionnez une date')
+    listeSportifs = (
+      <Typography align='justify'>
+        Il y a eu une erreur quelque part.
+        Votre compte a-t-il été bien validé ? Si ce n'est pas le cas,
+        pensez à renseigner vos noms/prénoms dans l'onglet paramètres.
+
+        Sinon, peut-être que l'événement auquel vous tentez d'accéder a été
+        supprimé.
+      </Typography>
+    )
   }
   else {
     //Is it current user || a user that trusts current user

@@ -12,10 +12,11 @@ import TextField from '@material-ui/core/TextField'
 import 'date-fns';
 import frLocale from "date-fns/locale/fr";
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import Grid from '@material-ui/core/Grid'
 import AlertConfirm from '../Administration/AlertConfirm'
-
+import InputAdornment from '@material-ui/core/InputAdornment';
+import EventIcon from '@material-ui/icons/Event';
 
 import firebase from '../Firebase/firebase'
 
@@ -198,7 +199,7 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
       <div>
         <Box p={1} />
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
-          <KeyboardDateTimePicker
+          <DateTimePicker
             label="Date"
             format="d MMM yyyy à HH:mm"
             value={date}
@@ -206,6 +207,11 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
             cancelLabel="annuler"
             fullWidth
             ampm={false}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">
+                <EventIcon color='action' />
+              </InputAdornment>,
+            }}
           />
         </MuiPickersUtilsProvider>
       </div>

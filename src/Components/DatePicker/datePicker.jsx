@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import 'date-fns';
 import frLocale from "date-fns/locale/fr";
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography'
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import grey from "@material-ui/core/colors/grey";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import EventIcon from '@material-ui/icons/Event';
 
 
 const materialTheme = createMuiTheme({
@@ -30,6 +32,7 @@ const materialTheme = createMuiTheme({
 const useStyles = makeStyles(theme => ({
   jour: {
     marginTop: -theme.spacing(0.8),
+    color: theme.palette.primary.main,
   },
 }));
 
@@ -178,7 +181,7 @@ export default function MaterialUIPickers(props) {
           <Grid item xs={8}>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={frLocale}>
               <ThemeProvider theme={materialTheme}>
-                <KeyboardDatePicker
+                <DatePicker
                   maxDate={maxDate}
                   minDate={minDate}
                   margin="normal"
@@ -187,14 +190,15 @@ export default function MaterialUIPickers(props) {
                   format="d MMM yyyy"
                   value={selectedDate}
                   onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                   autoOk={true}
                   shouldDisableDate={disableDates}
                   invalidDateMessage="Date non valide"
                   renderDay={handleRenderDay}
-                />
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">
+                      <EventIcon color='action' />
+                    </InputAdornment>,
+                  }} />
               </ThemeProvider>
             </MuiPickersUtilsProvider>
           </Grid>
