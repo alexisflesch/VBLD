@@ -72,7 +72,6 @@ export default function Entrainements() {
     setCurrentDateId(dateId)
   }
 
-
   if (loadings['loadingE']) {
     return <LoadingDiv />
   }

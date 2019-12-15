@@ -571,7 +571,12 @@ function GetDirectoryData(treeU, treeW) {
   const keysUsers = Object.keys(treeW)
   for (const key of keysUsers) {
     if (treeU[key]) {
-      res.push({ ...treeU[key]['readOnly'], ...treeU[key]['readWrite'], 'uid': key })
+      res.push({
+        ...treeU[key]['readOnly'],
+        ...treeU[key]['readWrite'],
+        'uid': key,
+        'onWhiteList': true,
+      })
     }
   }
   return res.sort(mySort('a-z', false, '0'))
@@ -597,11 +602,23 @@ function GetAdminData(treeU, treeW) {
     if (!temp['readOnly']['prenom']) temp['readOnly']['prenom'] = '?'
     if (treeW[key]) {
       if (!treeW[key]['admin']) {
-        res.push({ ...temp['readOnly'], ...temp['readWrite'], 'uid': key, 'authorized': true })
+        res.push({
+          ...temp['readOnly'],
+          ...temp['readWrite'],
+          'uid': key,
+          'onWhiteList': true,
+          'miniAdmin': treeW[key]['miniAdmin'] ? treeW[key]['miniAdmin'] : false,
+        })
       }
     }
     else {
-      res.push({ ...temp['readOnly'], ...temp['readWrite'], 'uid': key, 'authorized': false })
+      res.push({
+        ...temp['readOnly'],
+        ...temp['readWrite'],
+        'uid': key,
+        'onWhiteList': false,
+        'miniAdmin': false,
+      })
     }
   }
   return res.sort(sortAuth())

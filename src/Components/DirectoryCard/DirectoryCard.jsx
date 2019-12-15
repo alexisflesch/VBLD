@@ -1,7 +1,6 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -18,21 +17,8 @@ import ButtonsNormal from './ButtonsNormal';
 
 
 const useStyles = makeStyles(theme => ({
-  appBar: {
-    position: 'relative',
-    marginBottom: 0,
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-  action: {
-    margin: theme.spacing(1),
-    padding: 0,
-  },
   avatar: {
     marginTop: -11,
-    // marginBottom: -7,
     padding: 0,
     marginRight: theme.spacing(2),
   },
@@ -69,7 +55,7 @@ function getBackgroundColor(theme, authorized) {
 
 export default function MyCard(props) {
   const classes = useStyles();
-  const { sportif, boutons, authorized, handleClickAccept, handleClickBan } = props;
+  const { sportif, boutons, handleClickAccept } = props;
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
 
@@ -84,12 +70,13 @@ export default function MyCard(props) {
 
   let Buttons
   if (boutons === 'normal') {
-    Buttons = <ButtonsNormal handleClickAccept={handleClose} buttonName="Fermer" />
+    Buttons = <ButtonsNormal handleClickAccept={handleClose} buttonName="Fermer" space={8} />
   }
   else if (boutons === 'admin') {
     Buttons = <ButtonsAdmin
-      handleClickAccept={() => { handleClickAccept(); handleClose() }}
-      handleClickBan={() => { handleClickBan(); handleClose() }}
+      sportif={sportif}
+      handleClickAccept={(a, b, c) => { handleClickAccept(a, b, c); handleClose() }}
+      handleCancel={() => handleClose()}
     />
   }
 
@@ -107,7 +94,7 @@ export default function MyCard(props) {
             >
               <Grid item>
                 <Avatar className={classes.avatar}
-                  style={{ backgroundColor: getBackgroundColor(theme, authorized) }} >
+                  style={{ backgroundColor: getBackgroundColor(theme, sportif['onWhiteList']) }} >
                   {sportif['nom'].substring(0, 1)}
                 </ Avatar>
               </Grid>
@@ -135,7 +122,6 @@ export default function MyCard(props) {
           civilite={sportif['civilite']}
         />
 
-        <Box p={8} />
         {Buttons}
 
       </Dialog>

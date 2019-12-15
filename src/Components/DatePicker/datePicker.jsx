@@ -43,8 +43,15 @@ export default function MaterialUIPickers(props) {
   const [selectedDate, setSelectedDate] = React.useState(currentDate)
 
   //Quel jour est affiché ?
-  const jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
-  const jour = jours[selectedDate.getDay()]
+  let jour
+  if (selectedDate === 'fake date') {
+    jour = 'Date'
+  }
+  else {
+    const jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
+    jour = jours[selectedDate.getDay()]
+  }
+
 
   function minMaxDates() {
     let minDate, maxDate;

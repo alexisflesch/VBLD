@@ -38,7 +38,6 @@ export default function Annuaire() {
     annuaire = (
       data.map(sportif => <DirectoryCard key={sportif['uid']}
         sportif={sportif}
-        authorized={true}
         boutons="normal"
       />)
     )

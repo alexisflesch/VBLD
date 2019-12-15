@@ -17,7 +17,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import { ReactComponent as LogoGoogle } from '../../images/logoGoogle.svg';
 import { ReactComponent as LogoFacebook } from '../../images/logoFacebook.svg';
 
-import firebase from '../Firebase/firebase';
+import myFirebase from '../Firebase/firebase';
+
+import firebase from "@firebase/app";
+import '@firebase/auth'
+import '@firebase/database'
 
 
 const useStyles = makeStyles(theme => ({
@@ -77,7 +81,7 @@ function Copyright() {
 
 //Register new user (test)
 function createUser(email, password) {
-  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+  myFirebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
     if (error.code === 'auth/email-already-in-use') {
       alert('Cet utilisateur existe déjà.')
     }
@@ -92,7 +96,7 @@ function createUser(email, password) {
 
 
 function login(email, password) {
-  firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+  myFirebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
     if (error.code === 'auth/wrong-password') {
       alert('Mot de passe erroné')
     }
@@ -105,15 +109,15 @@ function login(email, password) {
 
 function handleFacebookLogin() {
   var provider = new firebase.auth.FacebookAuthProvider();
-  firebase.auth().signInWithRedirect(provider);
-  firebase.auth().getRedirectResult().then(function (result) { })
+  myFirebase.auth().signInWithRedirect(provider);
+  myFirebase.auth().getRedirectResult().then(function (result) { })
 }
 
 
 function handleGoogleLogin() {
   var provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithRedirect(provider);
-  firebase.auth().getRedirectResult().then(function (result) { })
+  myFirebase.auth().signInWithRedirect(provider);
+  myFirebase.auth().getRedirectResult().then(function (result) { })
 }
 
 

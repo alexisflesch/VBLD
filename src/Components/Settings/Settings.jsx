@@ -264,8 +264,7 @@ export default function Settings() {
         sportifs={sportifs}
       />
 
-      <Box p={2.5} />
-      <ButtonsNormal buttonName="Sauvegarder" handleClickAccept={handleSave} />
+      <ButtonsNormal buttonName="Sauvegarder" handleClickAccept={handleSave} space={2.5} />
     </Container>
   )
 }

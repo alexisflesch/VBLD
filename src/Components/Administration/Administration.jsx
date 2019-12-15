@@ -42,10 +42,9 @@ export default function Administration() {
     annuaire = (
       data.map(sportif => <DirectoryCard key={sportif['uid']}
         sportif={sportif}
-        authorized={sportif['authorized']}
         boutons="admin"
-        handleClickAccept={() => handleClickAccept(sportif)}
-        handleClickBan={() => handleClickBan(sportif)}
+        handleClickAccept={handleClickAccept}
+      // handleClickBan={handleClickBan}
       />)
     )
   }
@@ -69,20 +68,28 @@ export default function Administration() {
   }
 
 
-  function handleClickAccept(sportif) {
-    console.log("Authorizing user")
-    console.log(sportif['uid'])
-    var myRef = firebase.database().ref('/whiteList/' + sportif['uid'])
-    myRef.set({ admin: false, coach: false })
-    myRef = firebase.database().ref('/users/' + sportif['uid'] + '/readOnly/registred')
-    myRef.set(true)
+  function handleClickAccept(sportif, checkedWhiteList, checkedMiniAdmin) {
+    if (!checkedWhiteList) {
+      handleBan(sportif)
+    }
+    else {
+      console.log("Authorizing user")
+      console.log(sportif['uid'])
+      var myRef = firebase.database().ref('/whiteList/' + sportif['uid'])
+      myRef.set({ admin: false, coach: false, miniAdmin: checkedMiniAdmin })
+      myRef = firebase.database().ref('/users/' + sportif['uid'] + '/readOnly/registred')
+      myRef.set(true)
+    }
   }
 
-  function handleClickBan(sportif) {
+  function handleBan(sportif) {
     console.log("Removing user from whiteList (provided that he is in it)")
     console.log(sportif['uid'])
     var myRef = firebase.database().ref('/whiteList/' + sportif['uid'])
     myRef.remove()
+    console.log("Adding user to blackList for future reference")
+    myRef = firebase.database().ref('/blackList/' + sportif['uid'])
+    myRef.set({ banned: true })
   }
 
   function handleClickCreateEntrainements() {
