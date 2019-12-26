@@ -70,12 +70,20 @@ export default function LocationAndTime(props) {
   const { currentDateId, trainingOrMatch } = props;
 
   //Heure et lieu de la rencontre
-  const { domicile, exterieur, time, resultat, lieu } = findLocationAndTime(trees['treeE'], loadings['loadingE'], trainingOrMatch, currentDateId)
+  const { domicile, exterieur, time, score, lieu } = findLocationAndTime(trees['treeE'], loadings['loadingE'], trainingOrMatch, currentDateId)
 
   var rencontre = formatStuff(lieu, domicile, exterieur, trainingOrMatch, classes)
 
   let resOrTime
-  if (resultat) {
+  if (score) {
+    let resultat
+    if (!score['ext']) {
+      resultat = score['dom']
+    }
+    else {
+      resultat = score['dom'] + '-' + score['ext']
+    }
+
     resOrTime = <Typography variant='subtitle1'>{'(' + resultat + ')'}</Typography>
   }
   else {

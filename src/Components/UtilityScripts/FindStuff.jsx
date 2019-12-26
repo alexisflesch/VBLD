@@ -111,12 +111,13 @@ function authorizedEdit(userId, treeW, loadingW, errorW, treeE, loadingE, errorE
   // - déplacer/supprimer les matchs/pots vides
   // - modifier la date de n'importe quel match
 
-  //Résultat du match (si déjà renseigné, '' sinon ou si c'est un pot)
-  var resultat = treeE[branchName][dateId]['resultat']
-  if (!resultat) { resultat = '' }
+  //Résultat du match (si déjà renseigné)
+  var score = treeE[branchName][dateId]['score']
+  if (!score) { score = { dom: '', ext: '' } }
+
   //Date de l'événement
   const date = treeE[branchName][dateId]['numericalDate']
-  //Y a-t-il déjà des gens inscrits autre que l'utilisateur qui veut éditer ?
+  //Y a-t-il déjà des gens inscrits autres que l'utilisateur qui veut éditer ?
   var nbInscrits = 0
   const inscrits = treeE[branchName][dateId]['inscrits']
   if (inscrits) {
@@ -133,7 +134,7 @@ function authorizedEdit(userId, treeW, loadingW, errorW, treeE, loadingE, errorE
 
   if (branchName === 'matchs') {
     authorized = true
-    editable = { resultat }
+    editable = { score }
     var domicile = treeE[branchName][dateId]['EquipeDomicile']
     var exterieur = treeE[branchName][dateId]['EquipeExterieur']
     if (admin || createdByUser) {

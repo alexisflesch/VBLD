@@ -138,6 +138,51 @@ function findCorrespondingTraining(dateId, treeE, loadingE) {
 }
 
 
+function extractResults(tree, loading, error, branchName) {
+  //Inputs:
+  //  - tree : a firebase tree
+  //  - loading : true if data is still loading
+  //  - branchName : a branch name ("matchs", maybe "PouleA", "PouleB" in the future...)
+  //Ouput:
+  //  - list of {date, domicile, exterieur, score}
+
+  var vide = []
+
+  if (loading || error || !tree) return vide
+
+  var subTree = tree[branchName]
+  if (!subTree) return vide
+
+  var today = new Date()
+
+  var results = []
+  const keys = Object.keys(subTree)
+  for (const dateId of keys) {
+    if (subTree[dateId]['championnat']) {
+      var date = new Date(parseInt(subTree[dateId]['numericalDate']))
+      var domicile = subTree[dateId]['EquipeDomicile']
+      var exterieur = subTree[dateId]['EquipeExterieur']
+      let score
+      if (subTree[dateId]['numericalDate'] < today.valueOf()) {
+        score = subTree[dateId]['score']
+      }
+      else {
+        score = {}
+      }
+      results.push({ date, domicile, exterieur, score })
+    }
+  }
+
+  //Tri de la liste des dates par ordre chronologique
+  results.sort(function (a, b) {
+    return a['date'].valueOf() - b['date'].valueOf();
+  });
+
+  return results
+}
+
+
+
 function extractDates(tree, loading, branchName) {
   //Inputs:
   //  - tree : a firebase tree
@@ -158,10 +203,12 @@ function extractDates(tree, loading, branchName) {
   var datesAndMore = []
   const keys = Object.keys(subTree)
   for (const dateId of keys) {
-    var date = new Date(parseInt(subTree[dateId]['numericalDate']))
-    var domicile = subTree[dateId]['EquipeDomicile']
-    var exterieur = subTree[dateId]['EquipeExterieur']
-    datesAndMore.push({ date, dateId, domicile, exterieur })
+    if (!subTree[dateId]['hidden']) {
+      var date = new Date(parseInt(subTree[dateId]['numericalDate']))
+      var domicile = subTree[dateId]['EquipeDomicile']
+      var exterieur = subTree[dateId]['EquipeExterieur']
+      datesAndMore.push({ date, dateId, domicile, exterieur })
+    }
   }
 
   //Tri de la liste des dates par ordre chronologique
@@ -530,31 +577,37 @@ function findLocationAndTime(treeE, loadingE, branchName, dateId) {
   //  - branchName : a branchName ("entrainements", "matchs", "pots", ...)
   //  - dateId : a date id
   //Ouput : 
-  //  - {time, lieu, domicile, exterieur, resultat}
+  //  - {time, lieu, domicile, exterieur, score}
 
   if (!dateId || loadingE || !treeE) return ''
   var subTree = treeE[branchName]
 
-  let domicile, exterieur, time, resultat, lieu
-  if (!subTree) {
+  let domicile, exterieur, time, score, lieu
+  if (dateId === 'fake date id') {
+    lieu = 'Chargement en cours'
+    domicile = 'Chargement en cours'
+    time = 'Chargement en cours'
+    score = {}
+  }
+  else if (!subTree) {
     domicile = 'Match inconnu'
-    time = 'Heure inconnue'
-    resultat = ''
+    time = 'Date inconnue'
+    score = {}
   }
   else if (!subTree[dateId]) {
     domicile = 'Match inconnu'
     time = 'Date inconnue'
-    resultat = ''
+    score = {}
   }
   else {
     domicile = subTree[dateId]['EquipeDomicile']
     exterieur = subTree[dateId]['EquipeExterieur']
     time = subTree[dateId]['readableTime']
-    resultat = subTree[dateId]['resultat']
+    score = subTree[dateId]['score']
     lieu = subTree[dateId]['lieu']
   }
 
-  return { domicile, exterieur, time, resultat, lieu }
+  return { domicile, exterieur, time, score, lieu }
 }
 
 
@@ -625,4 +678,4 @@ function GetAdminData(treeU, treeW) {
 }
 
 export default mySort
-export { extractPresence, extractDates, mySort, findNextEvent, findLocationAndTime, GetDirectoryData, GetAdminData, findCorrespondingTraining, nombreSelections, extractPresencePot, multipleEvents }
+export { extractPresence, extractDates, mySort, findNextEvent, findLocationAndTime, GetDirectoryData, GetAdminData, findCorrespondingTraining, nombreSelections, extractPresencePot, multipleEvents, extractResults }

@@ -17,7 +17,7 @@ import { authorizedEdit, isMiniAdmin } from '../UtilityScripts/FindStuff'
 import Summary from './Summary'
 import DialogEdit from '../Administration/DialogEdit'
 import AddButton from '../Administration/AddButton'
-
+import Error from '../Error/Error'
 
 
 const useStyles = makeStyles(theme => ({
@@ -50,6 +50,16 @@ export default function Pots() {
   //si un changement de date a eu lieu
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
 
+  //Mise à jour de l'affichage
+  React.useEffect(() => {
+    setCurrentDateId(dateId);
+  }, [dateId]);
+
+
+  if (errorE || errorW) {
+    return <Error />
+  }
+
   //Infobulles avec le nombre de présents
   const { totaux, summary } = extractPresencePot(treeE, loadingE, treeW, loadingW, treeU, loadingU, currentDateId)
 
@@ -75,17 +85,6 @@ export default function Pots() {
     />
   }
 
-
-  // Below is a fix needed if <matchs /> is the first thing
-  // the app shows. Maybe not need if users have to log in
-  // currentDateId is not properly initialized because FirebaseContext
-  // is initialized with a fake date while loading.
-  // When the true initial value arrives, the react Hook waits for
-  // the next render to update it
-  // Quick and dirty fix
-  if (currentDateId === 'fake date id' && dateId !== 'fake date id') {
-    setCurrentDateId(dateId)
-  }
 
 
   if (loadings['loadingE']) {

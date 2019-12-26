@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { multipleEvents, extractPresence } from '../UtilityScripts/TreeParsing'
 import AlertInfo from '../AlertInfo/AlertInfo'
 import Box from '@material-ui/core/Box'
-
+import Error from '../Error/Error'
 
 const useStyles = makeStyles(theme => ({
   margins: {
@@ -45,6 +45,14 @@ export default function Entrainements() {
   //si un changement de date a eu lieu
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
 
+  //Mise à jour de l'affichage
+  React.useEffect(() => {
+    setCurrentDateId(dateId);
+  }, [dateId]);
+
+  if (errorE) {
+    return <Error />
+  }
 
   //Infobulles avec le nombre de présents
   const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "entrainements", currentDateId)
@@ -60,17 +68,6 @@ export default function Entrainements() {
     attention = <AlertInfo events={events} />
   }
 
-
-  // Below is a fix needed if <Entrainements /> is the first thing
-  // the app shows. Maybe not need if users have to log in
-  // currentDateId is not properly initialized because FirebaseContext
-  // is initialized with a fake date while loading.
-  // When the true initial value arrives, the react Hook waits for
-  // the next render to update it
-  // Quick and dirty fix
-  if (currentDateId === 'fake date id' && dateId !== 'fake date id') {
-    setCurrentDateId(dateId)
-  }
 
   if (loadings['loadingE']) {
     return <LoadingDiv />

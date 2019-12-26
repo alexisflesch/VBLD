@@ -61,9 +61,11 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
     //Save everything
     let myRef
     //Résultat de la rencontre
-    if (editable['resultat'] !== undefined) {
-      myRef = firebase.database().ref(path + '/resultat')
-      myRef.set(editable['resultat'])
+    if (editable['score'] !== undefined) {
+      var dom = parseInt(editable['score']['dom'])
+      var ext = parseInt(editable['score']['ext'])
+      myRef = firebase.database().ref(path + '/score')
+      myRef.set({ dom, ext })
     }
     //Lieu de la rencontre
     if (editable['lieu'] !== undefined) {
@@ -104,9 +106,20 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
     setOpen(false)
   }
 
-  function handleChangeResult(event) {
-    editable['resultat'] = event.target.value
-    setFoo(!foo)
+  function handleChangeScoreDom(event) {
+    var reg = new RegExp('^$|^[0-3]$')
+    if (reg.test(event.target.value)) {
+      editable['score']['dom'] = event.target.value
+      setFoo(!foo)
+    }
+  }
+
+  function handleChangeScoreExt(event) {
+    var reg = new RegExp('^$|^[0-3]$')
+    if (reg.test(event.target.value)) {
+      editable['score']['ext'] = event.target.value
+      setFoo(!foo)
+    }
   }
 
   function handleDateChange(d) {
@@ -129,7 +142,7 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
     setFoo(!foo)
   }
 
-  let changeResult, changeDate, deleteButton, changeLieu, changeDomicile, changeExterieur
+  let changeScore, changeDate, deleteButton, changeLieu, changeDomicile, changeExterieur
 
 
   if (editable['lieu'] !== undefined) {
@@ -178,17 +191,36 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
   }
 
 
-  if (editable['resultat'] !== undefined) {
-    changeResult = (
+  if (editable['score'] !== undefined) {
+    changeScore = (
       <div>
         <Box p={1} />
-        <TextField id="standard-basic"
-          label="Score du match (exemple 3-1)"
-          multiline
-          value={editable['resultat']}
-          onChange={handleChangeResult}
-          fullWidth
-        />
+        <Typography>
+          Résultat du match
+        </Typography>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={5}>
+            <TextField id="standard-basic"
+              label="Domicile"
+              multiline
+              value={editable['score']['dom'].toString()}
+              onChange={handleChangeScoreDom}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField id="standard-basic"
+              label="Exterieur"
+              multiline
+              value={editable['score']['ext'].toString()}
+              onChange={handleChangeScoreExt}
+            />
+          </Grid>
+        </Grid>
       </div>
     )
   }
@@ -262,7 +294,7 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
           {changeLieu}
           {changeDomicile}
           {changeExterieur}
-          {changeResult}
+          {changeScore}
           {changeDate}
           {deleteButton}
         </DialogContent>

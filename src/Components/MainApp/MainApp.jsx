@@ -9,6 +9,7 @@ import Settings from '../Settings/Settings';
 import Annuaire from '../Annuaire/Annuaire';
 import Gymnases from '../Gymnases/Gymnases';
 import Administration from '../Administration/Administration';
+import Resultats from '../Resultats/Resultats'
 
 import firebase from '../Firebase/firebase';
 import { FirebaseProvider } from '../Firebase/FirebaseContext';
@@ -66,8 +67,9 @@ function MainApp(props) {
   const errors = { errorU, errorE, errorW, errorP };
 
   //Values to pass to the drawer
-  const [mainDiv, setMainDiv] = React.useState(<News />);
-  const [pageName, setPageName] = React.useState('Accueil');
+  const [mainDiv, setMainDiv] = React.useState(<Entrainements />);
+  const [pageName, setPageName] = React.useState('Entraînements');
+
 
   //Icône pour trier les sportifs ('a-z' ou 'presence')
   //On ajoutera dans le contexte principal un booléen qui passera à true quand il faudra trier
@@ -77,49 +79,26 @@ function MainApp(props) {
   const [triPresence, setTriPresence] = React.useState(true)
 
   function handleDivChange(newDiv) {
-    var futureDiv = "";
-    var futureName = "";
-    var futureMenu = "";
+    //Mise à jour de l'affichage
+    const correspondance = {
+      "entrainements": ["Entraînements", <Entrainements />, <SortMenu />],
+      "matchs": ["Matchs", <Matchs />, <SortMenu />],
+      "news": ["Accueil", <News />, ""],
+      "pots": ["Pots", <Pots />, ""],
+      "gymnases": ["Gymnases", <Gymnases />, ""],
+      "annuaire": ["Annuaire", <Annuaire />, ""],
+      "settings": ["Paramètres", <Settings />, ""],
+      "administration": ["Administration", <Administration />, ""],
+      "resultats": ["Résultats", <Resultats />, ""],
+    }
     if (newDiv === "disconnect") {
       firebase.auth().signOut();
     }
-    if (newDiv === "news") {
-      futureDiv = <News />
-      futureName = "Accueil"
+    else {
+      setPageName(correspondance[newDiv][0]);
+      setMainDiv(correspondance[newDiv][1])
+      setMenu(correspondance[newDiv][2])
     }
-    else if (newDiv === "matchs") {
-      futureDiv = <Matchs />
-      futureName = "Matchs"
-      futureMenu = <SortMenu />
-    }
-    else if (newDiv === "entrainements") {
-      futureDiv = <Entrainements />
-      futureName = "Entraînements"
-      futureMenu = <SortMenu />
-    }
-    else if (newDiv === "pots") {
-      futureDiv = <Pots />
-      futureName = "Pots"
-    }
-    else if (newDiv === "settings") {
-      futureDiv = <Settings />
-      futureName = "Paramètres"
-    }
-    else if (newDiv === "gymnases") {
-      futureDiv = <Gymnases />
-      futureName = "Gymnases"
-    }
-    else if (newDiv === "annuaire") {
-      futureDiv = <Annuaire />
-      futureName = "Annuaire"
-    }
-    else if (newDiv === "administration") {
-      futureDiv = <Administration />
-      futureName = "Administration"
-    }
-    setMainDiv(futureDiv);
-    setPageName(futureName);
-    setMenu(futureMenu)
   }
 
 

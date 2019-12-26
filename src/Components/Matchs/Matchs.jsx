@@ -15,7 +15,7 @@ import DialogEdit from '../Administration/DialogEdit'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import AddButton from '../Administration/AddButton'
-
+import Error from '../Error/Error'
 
 const useStyles = makeStyles(theme => ({
   margins: {
@@ -46,6 +46,16 @@ export default function Matchs() {
   //State passé au calendrier qui permettra de faire remonter l'info
   //si un changement de date a eu lieu
   const [currentDateId, setCurrentDateId] = React.useState(dateId)
+
+  //Mise à jour de l'affichage
+  React.useEffect(() => {
+    setCurrentDateId(dateId);
+  }, [dateId]);
+
+
+  if (errorE || errorW) {
+    return <Error />
+  }
 
   //Infobulles avec le nombre de présents
   const { totaux } = extractPresence(treeE, loadingE, treeW, loadingW, treeU, loadingU, "matchs", currentDateId)
@@ -82,9 +92,9 @@ export default function Matchs() {
   // When the true initial value arrives, the react Hook waits for
   // the next render to update it
   // Quick and dirty fix
-  if (currentDateId === 'fake date id' && dateId !== 'fake date id') {
-    setCurrentDateId(dateId)
-  }
+  // if (currentDateId === 'fake date id' && dateId !== 'fake date id') {
+  //   setCurrentDateId(dateId)
+  // }
 
 
   if (loadings['loadingE']) {

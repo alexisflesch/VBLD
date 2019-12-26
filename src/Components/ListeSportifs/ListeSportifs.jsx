@@ -6,6 +6,7 @@ import FirebaseContext from '../Firebase/FirebaseContext'
 import firebase from '../Firebase/firebase';
 
 import { extractPresence, extractPresencePot, mySort, nombreSelections } from '../UtilityScripts/TreeParsing'
+import LoadingDiv from '../LoadingDiv/LoadingDiv';
 
 
 function isUserCoach(user, loadingW, treeW) {
@@ -108,7 +109,10 @@ export default function ListeSportifs(props) {
 
   //Affichage de la liste si elle existe
   let listeSportifs
-  if (sportifs.length === 0) {
+  if (currentDateId === 'fake date id') {
+    listeSportifs = <LoadingDiv />
+  }
+  else if (sportifs.length === 0) {
     listeSportifs = (
       <Typography align='justify'>
         Il y a eu une erreur quelque part.

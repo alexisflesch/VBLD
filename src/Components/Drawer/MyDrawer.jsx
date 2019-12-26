@@ -15,6 +15,7 @@ import ContactsIcon from '@material-ui/icons/Contacts';
 import MapIcon from '@material-ui/icons/Map';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import HomeIcon from '@material-ui/icons/Home';
+import ScoreIcon from '@material-ui/icons/Score';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -116,6 +117,12 @@ function ResponsiveDrawer(props) {
             <SportsVolleyballIcon />
           </ListItemIcon>
           <ListItemText primary="Matchs" />
+        </ListItem>
+        <ListItem button onClick={() => { handleChange('resultats'); handleClick() }}>
+          <ListItemIcon>
+            <ScoreIcon />
+          </ListItemIcon>
+          <ListItemText primary="Résultats" />
         </ListItem>
       </List>
       <Divider />

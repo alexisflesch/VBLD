@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     width: 60,
     height: 60,
     marginLeft: -theme.spacing(4),
+    backgroundColor: 'rgba(0,0,0,0)',
   },
 }));
 

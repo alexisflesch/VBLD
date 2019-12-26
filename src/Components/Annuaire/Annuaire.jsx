@@ -6,25 +6,19 @@ import FirebaseContext from '../Firebase/FirebaseContext'
 import { GetDirectoryData } from '../UtilityScripts/TreeParsing';
 import LoadingDiv from '../LoadingDiv/LoadingDiv';
 import DirectoryCard from '../DirectoryCard/DirectoryCard'
-
+import Error from '../Error/Error'
 
 export default function Annuaire() {
 
   const { trees, loadings, errors } = useContext(FirebaseContext)
 
   //Chargement en cours ou utilisateur non autorisé ou erreur Firebase
-  if (loadings['loadingTreeU'] || loadings['loadingTreeW']) {
+  if (loadings['loadingU'] || loadings['loadingW']) {
     return <LoadingDiv />
   }
-  else if (errors['errorTreeU'] || errors['errorTreeW']) {
+  else if (errors['errorU'] || errors['errorW']) {
     return (
-      <Fragment>
-        <h3>Erreur</h3>
-        <Typography>
-          Une erreur est survenue : votre compte a-t-il bien été validé ? Si oui,
-          veuillez ré-essayer plus tard.
-        </Typography>
-      </Fragment>
+      <Error />
     )
   }
 
