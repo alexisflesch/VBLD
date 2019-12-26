@@ -34,19 +34,11 @@ for j in range(3, len(tr_elements) - 1):
 with open('./data.json') as f:
     json_old_data = json.load(f)
 
-#Save everything if new data
+# Save everything if new data
 if data == json_old_data:
     print('New data found')
     json_new_data = json.dumps(data)
     with open("data.json", "w") as f:
         f.write(json_new_data)
-
-    import ftplib
-    session = ftplib.FTP('ftp.alexisfles.ch','alexisfl','401B007')
-    session.cwd('/vbld/')
-    file = open('./data.json','rb')                  # file to send
-    session.storbinary('STOR data.json', file)       # send the file
-    file.close()                                     # close file and FTP
-    session.quit()
 else:
     print('Data is up to date')
