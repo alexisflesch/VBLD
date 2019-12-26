@@ -10,8 +10,6 @@
     "@material-ui/pickers": "^3.2.8",
     "date-fns": "^2.0.0-beta.5",
     "firebase": "^7.4.0",
-    "jQuery": "^1.7.4",
-    "jquery": "^3.4.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-firebase-hooks": "^2.1.1",
