@@ -13,7 +13,7 @@ import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import Link from '@material-ui/core/Link'
 
-import myData from '../../VolleyLoisir90/data.json'
+// import myData from '../../data.json'
 import { Typography } from '@material-ui/core';
 
 
@@ -34,6 +34,18 @@ const DanjoutinRow = withStyles(theme => ({
 
 
 export default function ResultatsPoule() {
+
+  const [myData, setMyData] = React.useState([])
+
+  React.useEffect(() => {
+    fetch('data/data.json')
+      .then((r) => {
+        return r.json()
+      })
+      .then((data) => {
+        setMyData(data)
+      })
+  }, [])
 
   let tableau
   try {
