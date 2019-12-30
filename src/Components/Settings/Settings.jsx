@@ -49,7 +49,7 @@ export default function Settings() {
   const classes = useStyles();
 
   //Firebase stuff
-  const { trees, loadings, errors, user, setTriPresence } = useContext(FirebaseContext)
+  const { trees, loadings, errors, user, setTriPresence, affichagePseudos } = useContext(FirebaseContext)
   const treeP = trees['treeP']
   const loadingP = loadings['loadingP']
   const errorP = errors['errorP']
@@ -124,7 +124,7 @@ export default function Settings() {
       meFirst,
       civilite,
       trustedUsers: trustedUsersT,
-      affichagePseudos: userDataInit['affichagePseudos']
+      affichagePseudos
     })
     //Setting stuff that can be changed at the begining of the
     //registration process only
