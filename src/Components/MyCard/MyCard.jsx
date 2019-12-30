@@ -23,6 +23,7 @@ import getBackgroundColor from '../UtilityScripts/Colors'
 import generateOptions from '../UtilityScripts/OptionsPresence'
 
 import Nourriture from '../Pots/Nourriture'
+import PseudoNomPrenom from '../UtilityScripts/PseudoNomPrenom'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -71,7 +72,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function MyCard(props) {
   const classes = useStyles();
-  const { sportif, options, handleUpdateSportif, handleSaveCoach, highlight, coach, updateable, pot, handleUpdatePot } = props;
+  const { sportif, options, handleUpdateSportif, handleSaveCoach, highlight, coach, updateable, pot, handleUpdatePot, affichagePseudos } = props;
   const [open, setOpen] = React.useState(false);
   var backgroundColor = getBackgroundColor(sportif)
 
@@ -130,6 +131,9 @@ export default function MyCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  var affichageNomPrenomPseudo = PseudoNomPrenom(sportif, affichagePseudos)
 
   //Affichage de Présent ou Présente en fonction de la civilité
   let presentCiv
@@ -233,7 +237,7 @@ export default function MyCard(props) {
               <Grid item xs>
 
                 <Typography className={classes.titre} variant="subtitle1">
-                  {sportif['nom'] + ' ' + sportif['prenom']}
+                  {affichageNomPrenomPseudo}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
                   {presentCiv}

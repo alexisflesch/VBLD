@@ -9,7 +9,7 @@ import Error from '../Error/Error'
 
 export default function Annuaire() {
 
-  const { trees, loadings, errors } = useContext(FirebaseContext)
+  const { trees, loadings, errors, affichagePseudos } = useContext(FirebaseContext)
 
   //Chargement en cours ou utilisateur non autorisé ou erreur Firebase
   if (loadings['loadingU'] || loadings['loadingW']) {
@@ -21,7 +21,7 @@ export default function Annuaire() {
     )
   }
 
-  const data = GetDirectoryData(trees['treeU'], trees['treeW'])
+  const data = GetDirectoryData(trees['treeU'], trees['treeW'], affichagePseudos)
   //Affichage de la liste si elle existe
   let annuaire
   if (!data) {
@@ -31,6 +31,7 @@ export default function Annuaire() {
     annuaire = (
       data.map(sportif => <DirectoryCard key={sportif['uid']}
         sportif={sportif}
+        affichagePseudos={affichagePseudos}
         boutons="normal"
       />)
     )

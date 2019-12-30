@@ -14,7 +14,7 @@ export default function SimpleMenu() {
   function handleClick(event) {
     var myRef = firebase.database().ref('/users/' + user['uid'] + '/readWrite/triPresence')
     myRef.set(!triPresence)
-    setTriPresence(false)
+    setTriPresence(!triPresence)
   };
 
   return (

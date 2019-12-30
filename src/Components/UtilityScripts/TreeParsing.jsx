@@ -1,3 +1,5 @@
+import PseudoNomPrenom from './PseudoNomPrenom'
+
 function sortAuth() {
   return function (a, b) {
     if (a['authorized'] === b['authorized']) {
@@ -13,23 +15,31 @@ function sortAuth() {
   }
 }
 
-function mySort(triPresence, meFirst, uid) {
+function mySort(triPresence, meFirst, uid, affichagePseudos) {
   //Inputs:
-  //  - sportifs : a list of {nom, prenom, uid, present}
-  //  - arg : a boolean
+  //  - triPresence : a a boolean
+  //  - meFirst : a boolean
+  //  - uid : sportif uid
+  //  - affichagePseudos : one of 
+  //                        * 'nom-prenom'
+  //                        * 'nom-prenom-pseudo'
+  //                        * 'pseudo'
+  //                        * 'pseudo-nom-prenom'
+  //Output : \pm 1
+
   if (!triPresence && meFirst) {
     return function (a, b) {
       if (a['uid'] === uid) return -1
       if (b['uid'] === uid) return 1
-      var foo = a['nom'] + a['prenom']
-      var bar = b['nom'] + b['prenom']
+      var foo = PseudoNomPrenom(a, affichagePseudos)
+      var bar = PseudoNomPrenom(b, affichagePseudos)
       return foo.localeCompare(bar)
     }
   }
   else if (!triPresence && !meFirst) {
     return function (a, b) {
-      var foo = a['nom'] + a['prenom']
-      var bar = b['nom'] + b['prenom']
+      var foo = PseudoNomPrenom(a, affichagePseudos)
+      var bar = PseudoNomPrenom(b, affichagePseudos)
       return foo.localeCompare(bar)
     }
   }
@@ -53,8 +63,8 @@ function mySort(triPresence, meFirst, uid) {
         presB = b['present']
       }
       if (presA === presB) {
-        var foo = a['nom'] + a['prenom']
-        var bar = b['nom'] + b['prenom']
+        var foo = PseudoNomPrenom(a, affichagePseudos)
+        var bar = PseudoNomPrenom(b, affichagePseudos)
         return foo.localeCompare(bar)
       }
       else {
@@ -369,6 +379,7 @@ function extractPresenceOne(treeE, loadingE, treeW, loadingW, treeU, loadingU, b
     var nom = treeU[key]['readOnly']['nom']
     var prenom = treeU[key]['readOnly']['prenom']
     var civilite = treeU[key]['readWrite']['civilite']
+    var pseudo = treeU[key]['readWrite']['pseudo']
     var trustedUsers = treeU[key]['readWrite']['trustedUsers']
     var uid = key
     let present, selectionne
@@ -416,7 +427,7 @@ function extractPresenceOne(treeE, loadingE, treeW, loadingW, treeU, loadingU, b
       }
     }
 
-    sportifs.push({ nom, prenom, civilite, uid, present, selectionne, trustedUsers })
+    sportifs.push({ nom, prenom, pseudo, civilite, uid, present, selectionne, trustedUsers })
   }
   return { sportifs, totaux }
 }
@@ -480,6 +491,7 @@ function extractPresencePot(treeE, loadingE, treeW, loadingW, treeU, loadingU, d
     var prenom = treeU[key]['readOnly']['prenom']
     var civilite = treeU[key]['readWrite']['civilite']
     var trustedUsers = treeU[key]['readWrite']['trustedUsers']
+    var pseudo = treeU[key]['readWrite']['pseudo']
     var uid = key
     let present, boissons, sucre, sale, autres
     //Si sportif a renseigné sa présence
@@ -500,7 +512,7 @@ function extractPresencePot(treeE, loadingE, treeW, loadingW, treeU, loadingU, d
       totaux['Non renseigné']++
     }
     sportifs.push({
-      nom, prenom, civilite,
+      nom, prenom, civilite, pseudo,
       uid, present, trustedUsers,
       boissons, sucre, sale, autres,
     })
@@ -611,7 +623,7 @@ function findLocationAndTime(treeE, loadingE, branchName, dateId) {
 }
 
 
-function GetDirectoryData(treeU, treeW) {
+function GetDirectoryData(treeU, treeW, affichagePseudos) {
   //Inputs:
   //  - treeU : firebase tree containing all users
   //  - treeW : firebase tree of white listed users
@@ -632,7 +644,7 @@ function GetDirectoryData(treeU, treeW) {
       })
     }
   }
-  return res.sort(mySort('a-z', false, '0'))
+  return res.sort(mySort(false, false, '0', affichagePseudos))
 }
 
 function GetAdminData(treeU, treeW) {

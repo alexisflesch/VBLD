@@ -25,7 +25,7 @@ export default function News() {
       <span>Pour vous rendre sur le blog de Danjoutin, </span>
       <Link href='http://vbld.blogspot.com'
         target='_blank' rel="noopener noreferrer">
-        ici
+        cliquez ici
       </Link>.
     </Typography>
   )

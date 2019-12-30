@@ -19,12 +19,14 @@ function GetUserData(treeP, loadingP, errorP) {
     treeP['readOnly']['prenom'] = ''
   }
   if (!treeP['readWrite']['telephone']) {
-    treeP['telephone'] = ''
+    treeP['readWrite']['telephone'] = ''
   }
   if (!treeP['readWrite']['email']) {
-    treeP['email'] = ''
+    treeP['readWrite']['email'] = ''
   }
-
+  if (!treeP['readWrite']['pseudo']) {
+    treeP['readWrite']['pseudo'] = ''
+  }
   if (!treeP['readWrite']['trustedUsers']) {
     treeP['readWrite']['trustedUsers'] = {}
   }

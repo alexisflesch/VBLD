@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 
 
 function ResponsiveDrawer(props) {
-  const { container, handleChange, menu, admin } = props;
+  const { container, handleChange, sortMenu, pseudoMenu, admin } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -185,7 +185,8 @@ function ResponsiveDrawer(props) {
           <Typography variant="h6" noWrap className={classes.title}>
             {props.pageName}
           </Typography>
-          {menu}
+          {pseudoMenu}
+          {sortMenu}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">

@@ -19,7 +19,7 @@ function isUserCoach(user, loadingW, treeW) {
 }
 
 
-function updateListSportifs(dateId, userId, trees, loadings, errors, trainingOrMatch, triPresence, setTriPresence) {
+function updateListSportifs(dateId, userId, trees, loadings, errors, trainingOrMatch, triPresence, affichagePseudos) {
   //Fonction qui met à jour la liste des sportifs
   if (loadings['loadingW'] || loadings['loadingU']) return []
 
@@ -42,23 +42,29 @@ function updateListSportifs(dateId, userId, trees, loadings, errors, trainingOrM
   let meFirst
   if (!loadingP && !errorP) {
     meFirst = treeP['readWrite']['meFirst']
-    setTriPresence(treeP['readWrite']['triPresence'])
   }
-  sportifs.sort(mySort(triPresence, meFirst, userId))
+  sportifs.sort(mySort(triPresence, meFirst, userId, affichagePseudos))
 
   return sportifs
 }
 
+
+
 export default function ListeSportifs(props) {
 
-  const { trees, loadings, errors, user, triPresence, setTriPresence } = useContext(FirebaseContext)
+  const { trees, loadings, errors,
+    user,
+    triPresence, setTriPresence,
+    affichagePseudos, setAffichagePseudos
+  } = useContext(FirebaseContext)
+
   const { currentDateId, trainingOrMatch } = props;
 
   //Get userId to highlight current user
   const userId = user['uid']
 
   //Liste des sportifs
-  var sportifs = updateListSportifs(currentDateId, userId, trees, loadings, errors, trainingOrMatch, triPresence, setTriPresence)
+  var sportifs = updateListSportifs(currentDateId, userId, trees, loadings, errors, trainingOrMatch, triPresence, affichagePseudos)
 
   //Is current user coach ?
   let coach
@@ -151,7 +157,7 @@ export default function ListeSportifs(props) {
         sportif={sportif}
         options={options}
         updateable={sportif['updateable']}
-        // updateable={true}
+        affichagePseudos={affichagePseudos}
         coach={coach}
         handleUpdateSportif={handleUpdateSportif}
         handleSaveCoach={handleSaveCoach}

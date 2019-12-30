@@ -14,6 +14,7 @@ import Slide from '@material-ui/core/Slide';
 import UserInfo from './UserInfo2';
 import ButtonsAdmin from './ButtonsAdmin';
 import ButtonsNormal from './ButtonsNormal';
+import PseudoNomPrenom from '../UtilityScripts/PseudoNomPrenom'
 
 
 const useStyles = makeStyles(theme => ({
@@ -55,7 +56,7 @@ function getBackgroundColor(theme, authorized) {
 
 export default function MyCard(props) {
   const classes = useStyles();
-  const { sportif, boutons, handleClickAccept } = props;
+  const { sportif, boutons, handleClickAccept, affichagePseudos } = props;
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
 
@@ -80,6 +81,9 @@ export default function MyCard(props) {
     />
   }
 
+  var affichageNomPrenomPseudo = PseudoNomPrenom(sportif, affichagePseudos)
+
+
   return (
     <Container maxWidth="xs" >
 
@@ -95,12 +99,12 @@ export default function MyCard(props) {
               <Grid item>
                 <Avatar className={classes.avatar}
                   style={{ backgroundColor: getBackgroundColor(theme, sportif['onWhiteList']) }} >
-                  {sportif['nom'].substring(0, 1)}
+                  {affichageNomPrenomPseudo.substring(0, 1)}
                 </ Avatar>
               </Grid>
               <Grid item>
                 <Typography className={classes.titre} variant="subtitle1">
-                  {sportif['nom'] + ' ' + sportif['prenom']}
+                  {affichageNomPrenomPseudo}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
                   {sportif['email']}
@@ -117,6 +121,7 @@ export default function MyCard(props) {
         <UserInfo
           nom={sportif['nom']}
           prenom={sportif['prenom']}
+          pseudo={sportif['pseudo']}
           email={sportif['email']}
           telephone={sportif['telephone']}
           civilite={sportif['civilite']}

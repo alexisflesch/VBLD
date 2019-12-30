@@ -13,7 +13,6 @@ import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import Link from '@material-ui/core/Link'
 
-// import myData from '../../data.json'
 import { Typography } from '@material-ui/core';
 
 
@@ -45,6 +44,9 @@ export default function ResultatsPoule() {
       .then((data) => {
         setMyData(data)
       })
+      .catch(function () {
+        console.log("Network error");
+      });
   }, [])
 
   let tableau

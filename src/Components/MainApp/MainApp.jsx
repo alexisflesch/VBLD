@@ -16,8 +16,11 @@ import { FirebaseProvider } from '../Firebase/FirebaseContext';
 
 import { useObjectVal } from 'react-firebase-hooks/database';
 import SortMenu from '../SortMenu/SortMenu';
+import PseudoMenu from '../SortMenu/PseudoMenu'
 
 import { isAdmin } from '../UtilityScripts/FindStuff';
+
+
 
 function MainApp(props) {
 
@@ -75,21 +78,36 @@ function MainApp(props) {
   //On ajoutera dans le contexte principal un booléen qui passera à true quand il faudra trier
   //  - menu : chaîne de caractères affichée dans la bar principale (bouton de tri ou rien)
   //  - tri : le type de tri sur la liste des sportifs
-  const [menu, setMenu] = React.useState('');
+  const [pseudoMenu, setPseudoMenu] = React.useState(<PseudoMenu />)
+  const [sortMenu, setSortMenu] = React.useState(<SortMenu />);
   const [triPresence, setTriPresence] = React.useState(true)
+
+  // State pour basculer l'affichage nom-prenom-pseudo
+  const [affichagePseudos, setAffichagePseudos] = React.useState('Nom Prénom')
+
+  // Mise à jour des states en fonction de firebase
+  React.useEffect(() => {
+    if (!errorP && !loadingP) {
+      setTriPresence(treeP['readWrite']['triPresence'])
+      if (treeP['readWrite']['affichagePseudos']) {
+        setAffichagePseudos(treeP['readWrite']['affichagePseudos'])
+      }
+    }
+  }, [errorP, treeP, loadingP]);
+
 
   function handleDivChange(newDiv) {
     //Mise à jour de l'affichage
     const correspondance = {
-      "entrainements": ["Entraînements", <Entrainements />, <SortMenu />],
-      "matchs": ["Matchs", <Matchs />, <SortMenu />],
-      "news": ["Accueil", <News />, ""],
-      "pots": ["Pots", <Pots />, ""],
-      "gymnases": ["Gymnases", <Gymnases />, ""],
-      "annuaire": ["Annuaire", <Annuaire />, ""],
-      "settings": ["Paramètres", <Settings />, ""],
-      "administration": ["Administration", <Administration />, ""],
-      "resultats": ["Résultats", <Resultats />, ""],
+      "entrainements": ["Entraînements", <Entrainements />, <SortMenu />, <PseudoMenu />],
+      "matchs": ["Matchs", <Matchs />, <SortMenu />, <PseudoMenu />],
+      "news": ["Accueil", <News />, "", ""],
+      "pots": ["Pots", <Pots />, <SortMenu />, <PseudoMenu />],
+      "gymnases": ["Gymnases", <Gymnases />, "", ""],
+      "annuaire": ["Annuaire", <Annuaire />, "", <PseudoMenu />],
+      "settings": ["Paramètres", <Settings />, "", ""],
+      "administration": ["Administration", <Administration />, "", ""],
+      "resultats": ["Résultats", <Resultats />, "", ""],
     }
     if (newDiv === "disconnect") {
       firebase.auth().signOut();
@@ -97,20 +115,29 @@ function MainApp(props) {
     else {
       setPageName(correspondance[newDiv][0]);
       setMainDiv(correspondance[newDiv][1])
-      setMenu(correspondance[newDiv][2])
+      setSortMenu(correspondance[newDiv][2])
+      setPseudoMenu(correspondance[newDiv][3])
     }
   }
 
 
 
   return (
-    <FirebaseProvider value={{ user, trees, loadings, errors, triPresence, setTriPresence }}>
+    <FirebaseProvider value={{
+      user,
+      trees,
+      loadings,
+      errors,
+      triPresence, setTriPresence,
+      affichagePseudos, setAffichagePseudos,
+    }}>
       <div>
         <ResponsiveDrawer
           div={mainDiv}
           pageName={pageName}
           handleChange={handleDivChange}
-          menu={menu}
+          sortMenu={sortMenu}
+          pseudoMenu={pseudoMenu}
           admin={admin}
           newUser={newUser}
         />

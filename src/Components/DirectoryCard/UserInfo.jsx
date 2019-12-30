@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react'
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
+import ChildCareIcon from '@material-ui/icons/ChildCare';
+import HelpIcon from '@material-ui/icons/Help';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -19,7 +22,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
-
+import Help from '../Settings/Help'
 
 
 
@@ -38,15 +41,48 @@ const useStyles = makeStyles(theme => ({
 
 export default function UserInfo(props) {
   const classes = useStyles();
-  const { nom, prenom, email, telephone, handleChangeNom,
-    handleChangePrenom, handleChangeTelephone, handleChangeEmail,
-    civilite, handleChangeCivilite, disabled } = props;
+  const { nom, prenom, pseudo, email, telephone, handleChangePseudo,
+    handleChangeNom, handleChangePrenom, handleChangeTelephone,
+    handleChangeEmail, civilite, handleChangeCivilite, disabled } = props;
+
+
+  const [openHelpPseudo, setOpenHelpPseudo] = React.useState(false)
+  const [openHelpEmail, setOpenHelpEmail] = React.useState(false)
+  const [openHelpTelephone, setOpenHelpTelephone] = React.useState(false)
+
+  function handleHelpPseudo() {
+    setOpenHelpPseudo(true)
+  }
+
+  function handleHelpEmail() {
+    setOpenHelpEmail(true)
+  }
+
+  function handleHelpTelephone() {
+    setOpenHelpTelephone(true)
+  }
 
   return (
     <Fragment>
+
+      {/* Pop-up d'aide pour le pseudo  et autres*/}
+      <Help
+        open={openHelpPseudo}
+        setOpen={setOpenHelpPseudo}
+        content='pseudo'
+      />
+      <Help
+        open={openHelpEmail}
+        setOpen={setOpenHelpEmail}
+        content='email'
+      />
+      <Help
+        open={openHelpTelephone}
+        setOpen={setOpenHelpTelephone}
+        content='telephone'
+      />
+
       <FormLabel component="legend">Civilité</FormLabel>
-
-
 
       <Grid container justify="center">
         <Grid item xs={10}>
@@ -93,36 +129,110 @@ export default function UserInfo(props) {
         onChange={handleChangePrenom}
         disabled={disabled}
       />
-      <InputLabel htmlFor="input-with-icon-adornment">
-        Adresse email
+
+      <Grid container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        spacing={0}
+      >
+        <Grid item xs={10}>
+          <InputLabel htmlFor="input-with-icon-adornment">
+            Pseudo
         </InputLabel>
-      <Input
-        id="input-with-icon-adornment"
-        startAdornment={
-          <InputAdornment position="start">
-            <MailIcon />
-          </InputAdornment>
-        }
-        value={email}
-        className={classes.margin}
-        fullWidth
-        onChange={handleChangeEmail}
-      />
-      <InputLabel htmlFor="input-with-icon-adornment">
-        Téléphone
+          <Input
+            id="input-with-icon-adornment"
+            startAdornment={
+              <InputAdornment position="start">
+                <ChildCareIcon />
+              </InputAdornment>
+            }
+            value={pseudo}
+            className={classes.margin}
+            fullWidth
+            onChange={handleChangePseudo}
+          />
+        </Grid>
+        <Grid item>
+          <IconButton
+            aria-label="aide"
+            color="primary"
+            onClick={handleHelpPseudo}
+          >
+            <HelpIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        spacing={0}
+      >
+        <Grid item xs={10}>
+          <InputLabel htmlFor="input-with-icon-adornment">
+            Adresse email
         </InputLabel>
-      <Input
-        id="input-with-icon-adornment"
-        startAdornment={
-          <InputAdornment position="start">
-            <PhoneIcon />
-          </InputAdornment>
-        }
-        value={telephone}
-        className={classes.margin}
-        fullWidth
-        onChange={handleChangeTelephone}
-      />
+          <Input
+            id="input-with-icon-adornment"
+            startAdornment={
+              <InputAdornment position="start">
+                <MailIcon />
+              </InputAdornment>
+            }
+            value={email}
+            className={classes.margin}
+            fullWidth
+            onChange={handleChangeEmail}
+          />
+        </Grid>
+        <Grid item>
+          <IconButton
+            aria-label="aide"
+            color="primary"
+            onClick={handleHelpEmail}
+          >
+            <HelpIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        spacing={0}
+      >
+        <Grid item xs={10}>
+          <InputLabel htmlFor="input-with-icon-adornment">
+            Téléphone
+        </InputLabel>
+          <Input
+            id="input-with-icon-adornment"
+            startAdornment={
+              <InputAdornment position="start">
+                <PhoneIcon />
+              </InputAdornment>
+            }
+            value={telephone}
+            className={classes.margin}
+            fullWidth
+            onChange={handleChangeTelephone}
+          />
+        </Grid>
+        <Grid item>
+          <IconButton
+            aria-label="aide"
+            color="primary"
+            onClick={handleHelpTelephone}
+          >
+            <HelpIcon />
+          </IconButton>
+        </Grid>
+      </Grid >
     </Fragment >
   )
 }

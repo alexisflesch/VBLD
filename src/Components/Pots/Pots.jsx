@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function Pots() {
+
   const classes = useStyles();
 
   //Context de firebase

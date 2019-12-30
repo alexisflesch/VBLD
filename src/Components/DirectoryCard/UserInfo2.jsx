@@ -15,10 +15,6 @@ import Grid from '@material-ui/core/Grid';
 
 
 const useStyles = makeStyles(theme => ({
-  bigBox: {
-    marginLeft: 0,
-    marginRight: 0,
-  },
   bigAvatar: {
     width: 100,
     height: 100,
@@ -37,8 +33,14 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     marginTop: -60,
-    marginRight: 10,
     color: "#ffffff",
+  },
+  pseudo: {
+    backgroundColor: theme.palette.primary.main,
+    color: "#ffffff",
+    padding: theme.spacing(2),
+    margin: 0,
+    height: 125,
   },
   paper: {
     margin: theme.spacing(1),
@@ -58,7 +60,7 @@ function formatte(tel) {
 
 export default function UserInfo2(props) {
   const classes = useStyles();
-  var { nom, prenom, email, telephone, civilite } = props;
+  var { nom, prenom, email, telephone, civilite, pseudo } = props;
 
   //Choix de l'avatar
   let photo
@@ -143,7 +145,10 @@ export default function UserInfo2(props) {
 
   return (
     <Fragment>
-      <Box bgcolor="primary.main" p={8} className={classes.bigBox} />
+      <Typography variant='h5' className={classes.pseudo}>
+        {pseudo ? pseudo : ''}
+      </Typography>
+      {/* <Box bgcolor="primary.main" p={7} className={classes.bigBox} /> */}
 
       <Grid
         container
