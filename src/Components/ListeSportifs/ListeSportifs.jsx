@@ -54,8 +54,8 @@ export default function ListeSportifs(props) {
 
   const { trees, loadings, errors,
     user,
-    triPresence, setTriPresence,
-    affichagePseudos, setAffichagePseudos
+    triPresence,
+    affichagePseudos,
   } = useContext(FirebaseContext)
 
   const { currentDateId, trainingOrMatch } = props;
