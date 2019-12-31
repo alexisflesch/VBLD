@@ -109,20 +109,20 @@ export default function UserInfo(props) {
 
 
 
-      <InputLabel htmlFor="component-simple">
+      <InputLabel htmlFor="nom">
         Nom
       </InputLabel>
-      <Input id="component-simple"
+      <Input id="nom"
         value={nom}
         className={classes.margin}
         fullWidth
         onChange={handleChangeNom}
         disabled={disabled}
       />
-      <InputLabel htmlFor="component-simple">
+      <InputLabel htmlFor="prenom">
         Prénom
       </InputLabel>
-      <Input id="component-simple"
+      <Input id="prenom"
         value={prenom}
         className={classes.margin}
         fullWidth
@@ -137,11 +137,11 @@ export default function UserInfo(props) {
         spacing={0}
       >
         <Grid item xs={10}>
-          <InputLabel htmlFor="input-with-icon-adornment">
+          <InputLabel htmlFor="pseudo">
             Pseudo
         </InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="pseudo"
             startAdornment={
               <InputAdornment position="start">
                 <ChildCareIcon />
@@ -172,11 +172,11 @@ export default function UserInfo(props) {
         spacing={0}
       >
         <Grid item xs={10}>
-          <InputLabel htmlFor="input-with-icon-adornment">
+          <InputLabel htmlFor="email">
             Adresse email
         </InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="email"
             startAdornment={
               <InputAdornment position="start">
                 <MailIcon />
@@ -207,11 +207,11 @@ export default function UserInfo(props) {
         spacing={0}
       >
         <Grid item xs={10}>
-          <InputLabel htmlFor="input-with-icon-adornment">
+          <InputLabel htmlFor="telephone">
             Téléphone
         </InputLabel>
           <Input
-            id="input-with-icon-adornment"
+            id="telephone"
             startAdornment={
               <InputAdornment position="start">
                 <PhoneIcon />

@@ -19,8 +19,10 @@ import FirebaseContext from '../Firebase/FirebaseContext'
 
 const options = [
   'Nom Prénom',
+  'Prénom Nom',
   'Prénom',
   'Nom Prénom (Pseudo)',
+  'Prénom Nom (Pseudo)',
   'Prénom (Pseudo)',
   'Nom (Pseudo)',
   'Pseudo (Nom Prénom)',
@@ -61,8 +63,6 @@ export default function PseudoMenu() {
       myRef.set(newValue)
     }
   };
-
-  console.log(affichagePseudos)
 
   return (
     <>

@@ -77,7 +77,7 @@ export default function LocationAndTime(props) {
   let resOrTime
   if (score) {
     let resultat
-    if (!score['ext']) {
+    if (!score['ext'] && score['ext'] !== 0) {
       resultat = score['dom']
     }
     else {

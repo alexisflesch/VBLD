@@ -61,7 +61,7 @@ function PopUpDialog(open, setOpen, editable, deletable, path) {
     //Save everything
     let myRef
     //Résultat de la rencontre
-    if (editable['score'] !== undefined) {
+    if (editable['score'] !== undefined && editable['score']['dom'] && editable['score']['ext']) {
       var dom = parseInt(editable['score']['dom'])
       var ext = parseInt(editable['score']['ext'])
       myRef = firebase.database().ref(path + '/score')

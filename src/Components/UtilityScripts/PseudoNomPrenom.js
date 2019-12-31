@@ -29,6 +29,12 @@ export default function PseudoNomPrenom(sportif, affichagePseudos) {
     else if (affichagePseudos === 'Prénom') {
       res = sportif['prenom']
     }
+    else if (affichagePseudos === 'Prénom Nom') {
+      res = sportif['prenom'] + ' ' + sportif['nom']
+    }
+    else if (affichagePseudos === 'Prénom Nom (Pseudo)') {
+      res = sportif['prenom'] + ' ' + sportif['nom'] + ' (' + sportif['pseudo'] + ')'
+    }
   }
   //Sinon c'est chiant, on fait au mieux
   else {
@@ -54,6 +60,12 @@ export default function PseudoNomPrenom(sportif, affichagePseudos) {
     }
     else if (affichagePseudos === 'Prénom') {
       res = sportif['prenom']
+    }
+    else if (affichagePseudos === 'Prénom Nom') {
+      res = sportif['prenom'] + ' ' + sportif['nom']
+    }
+    else if (affichagePseudos === 'Prénom Nom (Pseudo)') {
+      res = sportif['prenom'] + ' ' + sportif['nom']
     }
   }
   return res
