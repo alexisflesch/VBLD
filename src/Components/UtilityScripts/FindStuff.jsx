@@ -30,6 +30,9 @@ function GetUserData(treeP, loadingP, errorP) {
   if (!treeP['readWrite']['trustedUsers']) {
     treeP['readWrite']['trustedUsers'] = {}
   }
+  if (!treeP['readWrite']['homePage']) {
+    treeP['readWrite']['homePage'] = ''
+  }
 
   return { ...treeP['readOnly'], ...treeP['readWrite'] }
 }

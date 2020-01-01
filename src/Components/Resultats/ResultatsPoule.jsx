@@ -12,9 +12,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import Link from '@material-ui/core/Link'
-
-import { Typography } from '@material-ui/core';
-
+import Typography from '@material-ui/core/Typography';
+import LoadingDiv from '../LoadingDiv/LoadingDiv'
 
 const NormalRow = withStyles(theme => ({
   root: {
@@ -37,17 +36,22 @@ export default function ResultatsPoule() {
   const [myData, setMyData] = React.useState([])
 
   React.useEffect(() => {
-    fetch('data/data.json')
-      .then((r) => {
-        return r.json()
-      })
-      .then((data) => {
-        setMyData(data)
-      })
-      .catch(function () {
-        console.log("Network error");
-      });
+    const fetchData = async () => {
+      try {
+        const res = await fetch('data/data.json')
+        const json = await res.json()
+        setMyData(json)
+      } catch (error) {
+        console.log(error)
+        setMyData('')
+      }
+    }
+    fetchData()
   }, [])
+
+  if (!myData) {
+    return <LoadingDiv />
+  }
 
   let tableau
   try {

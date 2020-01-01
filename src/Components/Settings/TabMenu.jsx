@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,24 +11,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-
-import IconButton from '@material-ui/core/IconButton';
-import ChildCareIcon from '@material-ui/icons/ChildCare';
-import firebase from '../Firebase/firebase'
-import FirebaseContext from '../Firebase/FirebaseContext'
-
-const options = [
-  'Nom Prénom',
-  'Prénom Nom',
-  'Prénom',
-  'Nom Prénom (Pseudo)',
-  'Prénom Nom (Pseudo)',
-  'Prénom (Pseudo)',
-  'Nom (Pseudo)',
-  'Pseudo (Nom Prénom)',
-  'Pseudo (Prénom)',
-];
-
+import { tabs, correspondanceSettings } from '../UtilityScripts/correspondance'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,10 +25,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PseudoMenu() {
+export default function TabMenu(props) {
 
-  //Context de firebase : setTriPresence(...) demande à (re)trier
-  const { affichagePseudos, setAffichagePseudos, user } = useContext(FirebaseContext);
+  const { homePage, setHomePage } = props
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -58,31 +40,24 @@ export default function PseudoMenu() {
     setOpen(false);
 
     if (newValue) {
-      setAffichagePseudos(newValue);
-      var myRef = firebase.database().ref('/users/' + user['uid'] + '/readWrite/affichagePseudos')
-      myRef.set(newValue)
+      setHomePage(correspondanceSettings[newValue]);
     }
   };
 
   return (
     <>
-      <IconButton
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        color="inherit"
-        onClick={handleClick}
-      >
-        <ChildCareIcon />
-      </IconButton>
+      <Button variant="outlined" color="primary" onClick={handleClick}>
+        Modifier la page d'accueil
+      </Button>
       <ConfirmationDialogRaw
         classes={{
           paper: classes.paper,
         }}
-        id="ringtone-menu"
+        id="tabs-menu"
         keepMounted
         open={open}
         onClose={handleClose}
-        value={affichagePseudos}
+        value={correspondanceSettings[homePage]}
       />
     </>
   );
@@ -127,7 +102,7 @@ function ConfirmationDialogRaw(props) {
       aria-labelledby="confirmation-dialog-title"
       open={open}
     >
-      <DialogTitle id="confirmation-dialog-title">Paramètres d'affichage</DialogTitle>
+      <DialogTitle id="confirmation-dialog-title">Page d'accueil</DialogTitle>
       <DialogContent dividers>
         <RadioGroup
           ref={radioGroupRef}
@@ -136,7 +111,7 @@ function ConfirmationDialogRaw(props) {
           value={value}
           onChange={handleChange}
         >
-          {options.map(option => (
+          {tabs.map(option => (
             <FormControlLabel
               value={option}
               key={option}
@@ -150,7 +125,7 @@ function ConfirmationDialogRaw(props) {
           Annuler
         </Button>
         <Button onClick={handleOk} color="primary">
-          Appliquer
+          Fermer
         </Button>
       </DialogActions>
     </Dialog>

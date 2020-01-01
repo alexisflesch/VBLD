@@ -20,6 +20,8 @@ export default function Error() {
         Une erreur est survenue. Votre compte a-t-il bien été validé ?
         Si ce n'est pas (encore) le cas, merci de vérifier que vous avez
         bien renseigné vos noms/prénoms dans les paramètres.
+        Sinon, il est possible que votre connexion internet soit mauvaise,
+        patientez un peu ou rechargez la page.
       </Typography>
     </div>
   )

@@ -21,6 +21,7 @@ import firebase from '../Firebase/firebase';
 
 import UserInfo from '../DirectoryCard/UserInfo';
 import LoadingDiv from '../LoadingDiv/LoadingDiv'
+import TabMenu from './TabMenu'
 
 
 const useStyles = makeStyles(theme => ({
@@ -72,6 +73,11 @@ export default function Settings() {
   const [telephone, setTelephone] = React.useState(userDataInit['telephone']);
   const [civilite, setCivilite] = React.useState(userDataInit['civilite']);
   const [trustedUsers, setTrustedUsers] = React.useState(userDataInit['trustedUsers'])
+  const [homePage, setHomePage] = React.useState(
+    userDataInit['homePage']
+      ? userDataInit['homePage']
+      : 'news'
+  )
 
   //SnackBar
   const [openBar, setOpenBar] = React.useState(false);
@@ -124,7 +130,8 @@ export default function Settings() {
       meFirst,
       civilite,
       trustedUsers: trustedUsersT,
-      affichagePseudos
+      affichagePseudos,
+      homePage: homePage,
     })
     //Setting stuff that can be changed at the begining of the
     //registration process only
@@ -323,7 +330,7 @@ export default function Settings() {
 
         <Button variant="outlined" color="primary" onClick={handleClickConfiance}>
           Utilisateurs de confiance
-      </Button>
+        </Button>
         <PopUpDialog
           open={openConf}
           setOpen={setOpenConf}
@@ -331,7 +338,9 @@ export default function Settings() {
           trustedUsers={trustedUsers ? trustedUsers : {}}
           sportifs={sportifs}
         />
-
+        <Box p={.5} />
+        <TabMenu homePage={homePage} setHomePage={setHomePage} />
+        {/* <Box p={.5} /> */}
         <ButtonsNormal buttonName="Sauvegarder" handleClickAccept={handleSave} space={2.5} />
       </Container>
     </>

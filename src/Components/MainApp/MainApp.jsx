@@ -1,25 +1,13 @@
 import React from 'react';
-
-import Matchs from '../Matchs/Matchs';
 import News from '../Nouvelles/News';
-import Pots from '../Pots/Pots'
-import Entrainements from '../Entrainements/Entrainements';
 import ResponsiveDrawer from '../Drawer/MyDrawer';
-import Settings from '../Settings/Settings';
-import Annuaire from '../Annuaire/Annuaire';
-import Gymnases from '../Gymnases/Gymnases';
-import Administration from '../Administration/Administration';
-import Resultats from '../Resultats/Resultats'
-
 import firebase from '../Firebase/firebase';
-import { FirebaseProvider } from '../Firebase/FirebaseContext';
 
+import { FirebaseProvider } from '../Firebase/FirebaseContext';
 import { useObjectVal } from 'react-firebase-hooks/database';
-import SortMenu from '../SortMenu/SortMenu';
-import PseudoMenu from '../SortMenu/PseudoMenu'
 
 import { isAdmin } from '../UtilityScripts/FindStuff';
-
+import { correspondanceMain } from '../UtilityScripts/correspondance'
 
 
 function MainApp(props) {
@@ -57,7 +45,10 @@ function MainApp(props) {
       email: user['email'],
       civilite: 'bipbip',
       triPresence: true,
-      meFirst: true
+      meFirst: true,
+      pseudo: '',
+      homePage: 'news',
+      affichagePseudos: 'Nom Prénom',
     })
   }
 
@@ -70,53 +61,48 @@ function MainApp(props) {
   const errors = { errorU, errorE, errorW, errorP };
 
   //Values to pass to the drawer
-  const [mainDiv, setMainDiv] = React.useState(<Entrainements />);
-  const [pageName, setPageName] = React.useState('Entraînements');
+  const [mainDiv, setMainDiv] = React.useState(<News />);
+  const [pageName, setPageName] = React.useState('Accueil');
 
 
   //Icône pour trier les sportifs ('a-z' ou 'presence')
   //On ajoutera dans le contexte principal un booléen qui passera à true quand il faudra trier
   //  - menu : chaîne de caractères affichée dans la bar principale (bouton de tri ou rien)
   //  - tri : le type de tri sur la liste des sportifs
-  const [pseudoMenu, setPseudoMenu] = React.useState(<PseudoMenu />)
-  const [sortMenu, setSortMenu] = React.useState(<SortMenu />);
+  const [pseudoMenu, setPseudoMenu] = React.useState('')
+  const [sortMenu, setSortMenu] = React.useState('');
   const [triPresence, setTriPresence] = React.useState(true)
 
   // State pour basculer l'affichage nom-prenom-pseudo
   const [affichagePseudos, setAffichagePseudos] = React.useState('Nom Prénom')
 
   // Mise à jour des states en fonction de firebase
+  // Affichage de l'onglet renseigné dans les paramètres le cas échéant
+  const [loadingFirstTime, setLoadingFirstTime] = React.useState(true)
   React.useEffect(() => {
     if (!errorP && !loadingP) {
       setTriPresence(treeP['readWrite']['triPresence'])
       if (treeP['readWrite']['affichagePseudos']) {
         setAffichagePseudos(treeP['readWrite']['affichagePseudos'])
       }
+      if (loadingFirstTime && treeP['readWrite']['homePage']) {
+        handleDivChange(treeP['readWrite']['homePage'])
+        setLoadingFirstTime(false)
+      }
     }
-  }, [errorP, treeP, loadingP]);
+  }, [errorP, treeP, loadingP, loadingFirstTime]);
 
 
   function handleDivChange(newDiv) {
     //Mise à jour de l'affichage
-    const correspondance = {
-      "entrainements": ["Entraînements", <Entrainements />, <SortMenu />, <PseudoMenu />],
-      "matchs": ["Matchs", <Matchs />, <SortMenu />, <PseudoMenu />],
-      "news": ["Accueil", <News />, "", ""],
-      "pots": ["Pots", <Pots />, <SortMenu />, <PseudoMenu />],
-      "gymnases": ["Gymnases", <Gymnases />, "", ""],
-      "annuaire": ["Annuaire", <Annuaire />, "", <PseudoMenu />],
-      "settings": ["Paramètres", <Settings />, "", ""],
-      "administration": ["Administration", <Administration />, "", ""],
-      "resultats": ["Résultats", <Resultats />, "", ""],
-    }
     if (newDiv === "disconnect") {
       firebase.auth().signOut();
     }
     else {
-      setPageName(correspondance[newDiv][0]);
-      setMainDiv(correspondance[newDiv][1])
-      setSortMenu(correspondance[newDiv][2])
-      setPseudoMenu(correspondance[newDiv][3])
+      setPageName(correspondanceMain[newDiv][0]);
+      setMainDiv(correspondanceMain[newDiv][1])
+      setSortMenu(correspondanceMain[newDiv][2])
+      setPseudoMenu(correspondanceMain[newDiv][3])
     }
   }
 
